@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { trpc } from '@/lib/trpc/client';
 import { WigCard } from './shared/WigCard';
 import { WIGS } from '@/lib/wigs-data';
 import type { Route, CartItem } from '@/types/app';
@@ -310,6 +311,44 @@ function TryOnModal({ wig, onClose, onAddToCart }: {
 }
 
 function ElodiePanel({ onClose }: { onClose: () => void }) {
+  const [conversationId, setConversationId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<{ id: string; role: 'user' | 'assistant'; content: string }[]>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const startConv = trpc.elodie.startConversation.useMutation();
+  const sendMsg = trpc.elodie.sendMessage.useMutation();
+
+  useEffect(() => {
+    if (!conversationId) {
+      startConv.mutate(undefined, {
+        onSuccess: (conv) => setConversationId(conv.id),
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || !conversationId || isLoading) return;
+    const text = input.trim();
+    setInput('');
+    setIsLoading(true);
+    setMessages((prev) => [...prev, { id: Date.now().toString(), role: 'user', content: text }]);
+    try {
+      const res = await sendMsg.mutateAsync({ conversationId, content: text });
+      setMessages((prev) => [...prev, { id: res.id, role: 'assistant', content: res.content }]);
+    } catch {
+      setMessages((prev) => [...prev, { id: 'err', role: 'assistant', content: 'Une erreur est survenue. Réessayez.' }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="elodie-panel">
       <div className="elodie-head">
@@ -324,20 +363,38 @@ function ElodiePanel({ onClose }: { onClose: () => void }) {
           </svg>
         </button>
       </div>
+
       <div className="elodie-messages">
         <div className="msg bot">
           Bonjour, je suis <strong>Élodie</strong> ✨<br />
           Votre styliste personnelle Glory Hair. Comment puis-je vous accompagner aujourd'hui ?
         </div>
+        {messages.map((m) => (
+          <div key={m.id} className={`msg ${m.role === 'user' ? 'user' : 'bot'}`}>
+            {m.content}
+          </div>
+        ))}
+        {isLoading && (
+          <div className="typing">
+            <span /><span /><span />
+          </div>
+        )}
+        <div ref={bottomRef} />
       </div>
-      <div className="elodie-input">
-        <input placeholder="Écrivez à Élodie…" />
-        <button className="elodie-send">
+
+      <form className="elodie-input" onSubmit={handleSend}>
+        <input
+          placeholder="Écrivez à Élodie…"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={isLoading || !conversationId}
+        />
+        <button className="elodie-send" type="submit" disabled={isLoading || !input.trim() || !conversationId}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M22 2 11 13M22 2l-7 20-4-9-9-4z" />
           </svg>
         </button>
-      </div>
+      </form>
     </div>
   );
 }
