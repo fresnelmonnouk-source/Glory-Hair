@@ -45,7 +45,6 @@ export async function confirmPaymentIntent(intentId: string) {
     return {
       status: intent.status, // 'succeeded', 'processing', 'requires_action', etc.
       amount: intent.amount,
-      charges: intent.charges.data,
     };
   } catch (error) {
     console.error('Error confirming payment intent:', error);
