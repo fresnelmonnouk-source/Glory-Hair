@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure, publicProcedure } from '../init';
+import { router, protectedProcedure } from '../init';
 import { getElodieResponse } from '@/server/services/elodie/elodie.service';
 
 export const elodieRouter = router({
