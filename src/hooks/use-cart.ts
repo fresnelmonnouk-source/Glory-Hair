@@ -8,9 +8,6 @@ export function useCart() {
   const store = useCartStore();
   const { data: serverCart } = trpc.cart.list.useQuery();
   const addItemMutation = trpc.cart.addItem.useMutation();
-  const updateQuantityMutation = trpc.cart.updateQuantity.useMutation();
-  const removeItemMutation = trpc.cart.removeItem.useMutation();
-  const clearMutation = trpc.cart.clear.useMutation();
 
   useEffect(() => {
     if (serverCart) {
