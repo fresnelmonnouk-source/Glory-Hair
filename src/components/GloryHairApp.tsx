@@ -339,7 +339,7 @@ function ElodiePanel({ onClose }: { onClose: () => void }) {
         convId = conv.id;
         setConversationId(convId);
       }
-      const res = await sendMsg.mutateAsync({ conversationId: convId, content: text });
+      const res = await sendMsg.mutateAsync({ conversationId: convId as string, content: text });
       setMessages((prev) => [...prev, { id: res.id, role: 'assistant', content: res.content }]);
     } catch {
       setMessages((prev) => [...prev, { id: 'err-' + Date.now(), role: 'assistant', content: 'Une erreur est survenue. Réessayez.' }]);
