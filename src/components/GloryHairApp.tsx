@@ -153,11 +153,10 @@ export function GloryHairApp() {
   );
 
   // Try-on page
-  const TryOnPage = ({ onSelectWig, goProduct, wishlistIds, onToggleWishlist }: {
+  const TryOnPage = ({ onSelectWig, goProduct, wishlistIds }: {
     onSelectWig: (w: typeof WIGS[0]) => void
     goProduct: (w: typeof WIGS[0]) => void
     wishlistIds: string[]
-    onToggleWishlist: (id: string) => void
   }) => (
     <div style={{ maxWidth: 1320, margin: '0 auto', padding: '48px 40px 120px' }}>
       <div style={{ textAlign: 'center', marginBottom: 64 }}>
