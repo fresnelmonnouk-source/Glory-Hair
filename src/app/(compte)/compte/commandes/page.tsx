@@ -1,5 +1,8 @@
+export const dynamic = 'force-dynamic';
+
 import { getCurrentUser } from '@/lib/supabase/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
 const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> = {
@@ -12,6 +15,7 @@ const STATUS_MAP: Record<string, { label: string; color: string; bg: string }> =
 
 export default async function CommandesPage() {
   const user = await getCurrentUser();
+  if (!user) redirect('/connexion');
   const supabase = createServerSupabaseClient();
 
   const { data: orders } = await supabase

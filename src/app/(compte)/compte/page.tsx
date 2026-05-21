@@ -1,9 +1,13 @@
+export const dynamic = 'force-dynamic';
+
 import { getCurrentUser } from '@/lib/supabase/server';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 
 export default async function ComptePage() {
   const user = await getCurrentUser();
+  if (!user) redirect('/connexion');
   const supabase = createServerSupabaseClient();
 
   const { data: profile } = await supabase
