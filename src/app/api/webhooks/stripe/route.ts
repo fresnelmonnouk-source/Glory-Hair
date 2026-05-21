@@ -1,9 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import {
-  verifyWebhookSignature,
-  confirmPaymentIntent,
-} from '@/server/services/payment/stripe.service';
+import { verifyWebhookSignature } from '@/server/services/payment/stripe.service';
 
 export async function POST(request: NextRequest) {
   const body = await request.text();
