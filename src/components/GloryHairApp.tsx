@@ -321,29 +321,28 @@ function ElodiePanel({ onClose }: { onClose: () => void }) {
   const sendMsg = trpc.elodie.sendMessage.useMutation();
 
   useEffect(() => {
-    if (!conversationId) {
-      startConv.mutate(undefined, {
-        onSuccess: (conv) => setConversationId(conv.id),
-      });
-    }
-  }, []);
-
-  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isLoading]);
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim() || !conversationId || isLoading) return;
+    if (!input.trim() || isLoading) return;
     const text = input.trim();
     setInput('');
     setIsLoading(true);
     setMessages((prev) => [...prev, { id: Date.now().toString(), role: 'user', content: text }]);
     try {
-      const res = await sendMsg.mutateAsync({ conversationId, content: text });
+      // Démarre la conversation au premier message si pas encore initiée
+      let convId = conversationId;
+      if (!convId) {
+        const conv = await startConv.mutateAsync(undefined);
+        convId = conv.id;
+        setConversationId(convId);
+      }
+      const res = await sendMsg.mutateAsync({ conversationId: convId, content: text });
       setMessages((prev) => [...prev, { id: res.id, role: 'assistant', content: res.content }]);
     } catch {
-      setMessages((prev) => [...prev, { id: 'err', role: 'assistant', content: 'Une erreur est survenue. Réessayez.' }]);
+      setMessages((prev) => [...prev, { id: 'err-' + Date.now(), role: 'assistant', content: 'Une erreur est survenue. Réessayez.' }]);
     } finally {
       setIsLoading(false);
     }
@@ -387,9 +386,9 @@ function ElodiePanel({ onClose }: { onClose: () => void }) {
           placeholder="Écrivez à Élodie…"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          disabled={isLoading || !conversationId}
+          disabled={isLoading}
         />
-        <button className="elodie-send" type="submit" disabled={isLoading || !input.trim() || !conversationId}>
+        <button className="elodie-send" type="submit" disabled={isLoading || !input.trim()}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M22 2 11 13M22 2l-7 20-4-9-9-4z" />
           </svg>
