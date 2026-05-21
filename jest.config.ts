@@ -10,7 +10,6 @@ const config: Config = {
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { tsconfig: { jsx: 'react' } }],
   },
-  setupFilesAfterFramework: [],
 };
 
 export default config;
