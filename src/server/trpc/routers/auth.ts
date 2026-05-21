@@ -1,5 +1,4 @@
 import { publicProcedure, router } from '../init';
-import { z } from 'zod';
 
 /**
  * Auth procedures
