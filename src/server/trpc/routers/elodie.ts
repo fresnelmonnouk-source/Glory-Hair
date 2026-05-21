@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { router, protectedProcedure } from '../init';
+import { router, protectedProcedure, publicProcedure } from '../init';
 import { getElodieResponse } from '@/server/services/elodie/elodie.service';
 
 export const elodieRouter = router({
@@ -154,5 +154,14 @@ export const elodieRouter = router({
       if (error) throw new Error(error.message);
 
       return { success: true };
+    }),
+
+  chat: publicProcedure
+    .input(z.object({ message: z.string().min(1).max(2000) }))
+    .mutation(async ({ input }) => {
+      const { content, tokens_used } = await getElodieResponse([
+        { role: 'user', content: input.message }
+      ]);
+      return { content, tokens_used };
     }),
 });

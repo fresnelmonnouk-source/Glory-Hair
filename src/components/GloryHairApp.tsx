@@ -5,6 +5,7 @@ import { Orb } from './shared/Orb';
 import { CrownMark } from './shared/CrownMark';
 import { WigCard } from './shared/WigCard';
 import { WIGS } from '@/lib/wigs-data';
+import { trpc } from '@/lib/trpc/client';
 
 type Route = 'home' | 'catalog' | 'product' | 'cart' | 'checkout' | 'auth' | 'account' | 'admin' | 'wishlist' | 'tryon' | 'journal';
 
@@ -41,21 +42,28 @@ export function GloryHairApp() {
     },
   ]);
   const [elodieInput, setElodieInput] = useState('');
+  const elodieChat = trpc.elodie.chat.useMutation();
 
-  const sendElodieMessage = () => {
+  const sendElodieMessage = async () => {
     if (!elodieInput.trim()) return;
 
-    // Add user message
-    setElodieMessages(prev => [...prev, { role: 'user', content: elodieInput }]);
+    const userMessage = elodieInput;
     setElodieInput('');
 
-    // Simulate bot response (mock)
-    setTimeout(() => {
+    // Add user message
+    setElodieMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+
+    try {
+      // Get response from Deepseek via tRPC
+      const response = await elodieChat.mutateAsync({ message: userMessage });
+      setElodieMessages(prev => [...prev, { role: 'bot', content: response.content }]);
+    } catch (error) {
+      console.error('Elodie error:', error);
       setElodieMessages(prev => [...prev, {
         role: 'bot',
-        content: 'Merci pour votre message! 💭 Je traite votre demande...'
+        content: 'Désolée, j\'ai eu un problème. Pouvez-vous réessayer?'
       }]);
-    }, 500);
+    }
   };
 
   const goProduct = (wig: typeof WIGS[0]) => {
