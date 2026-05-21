@@ -43,7 +43,6 @@ export async function getElodieResponse(
       ],
       temperature: 0.3,
       max_tokens: 300,
-      timeout: 30000,
     });
 
     const content =
