@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { TRPCProvider } from '@/lib/trpc/provider';
 import '@/styles/design.css';
+import '@/styles/responsive.css';
 
 export const viewport: Viewport = {
   width: 'device-width',
