@@ -26,7 +26,7 @@ export function GloryHairApp() {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [showTryOn, setShowTryOn] = useState(false);
   const [elodieChatOpen, setElodieChatOpen] = useState(false);
-  const [elodieMessages, setElodieMessages] = useState<
+  const [elodieMessages] = useState<
     Array<{ role: 'user' | 'bot'; content: React.ReactNode; quickReplies?: string[] }>
   >([
     {
