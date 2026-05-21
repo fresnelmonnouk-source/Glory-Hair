@@ -36,7 +36,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body>
+      <body suppressHydrationWarning>
         <TRPCProvider>
           {children}
         </TRPCProvider>

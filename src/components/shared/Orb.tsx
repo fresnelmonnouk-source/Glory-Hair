@@ -20,7 +20,7 @@ export function Orb({
   const orbStyle = {
     '--orb-color': color,
     ...style,
-    transform: `rotate(${rotation}deg) ${style.transform || ''}`,
+    transform: `rotate(${rotation}deg) ${style.transform || ''}`.trim(),
   } as React.CSSProperties;
 
   return (

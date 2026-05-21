@@ -45,12 +45,12 @@ export function GloryHairApp() {
         setRoute={setRoute}
         wishlistCount={wishlistIds.length}
         cartCount={cartItems.length}
+        isLoggedIn={false}
         onElodieToggle={() => setElodieChatOpen((o) => !o)}
-        elodieOpen={elodieChatOpen}
       />
 
       {route === 'home' && (
-        <HomeScreen setRoute={setRoute} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} onGoProduct={goProduct} />
+        <HomeScreen setRoute={setRoute} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} onGoProduct={goProduct} onOpenChat={() => setElodieChatOpen(true)} />
       )}
       {route === 'catalog' && (
         <CatalogScreen setRoute={setRoute} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} onGoProduct={goProduct} />
