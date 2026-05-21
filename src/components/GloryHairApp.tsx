@@ -518,7 +518,7 @@ export function GloryHairApp() {
             <div className="opt-block">
               <div className="opt-label">
                 <span>Coloris</span>
-                <strong>{colorNames[color] || 'Personnalisé'}</strong>
+                <strong>{color ? colorNames[color] || 'Personnalisé' : 'Personnalisé'}</strong>
               </div>
               <div className="color-row">
                 {selectedWig.swatches.map((c) => (
@@ -575,7 +575,7 @@ export function GloryHairApp() {
   // Try-on Modal
   const TryOnModal = ({ wig, onClose }: { wig: typeof WIGS[0]; onClose: () => void }) => {
     const [step, setStep] = useState<'mode' | 'quality' | 'consent' | 'processing' | 'result'>('mode');
-    const [mode, setMode] = useState<'camera' | 'photo' | null>(null);
+    const [, setMode] = useState<'camera' | 'photo' | null>(null);
     const [quality, setQuality] = useState<'basic' | 'premium' | null>(null);
     const [consent, setConsent] = useState({ essential: false, storage: false, improvement: false, premiumAI: false });
     const [progress, setProgress] = useState(0);
@@ -809,7 +809,6 @@ export function GloryHairApp() {
   // Checkout Screen
   const CheckoutScreen = () => {
     const [step, setStep] = useState(1);
-    const [address, setAddress] = useState('');
     const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'fedapay'>('stripe');
 
     const subtotal = cartItems.reduce((s, i) => s + i.price * i.qty, 0);
@@ -1198,7 +1197,7 @@ export function GloryHairApp() {
       {route === 'admin' && <AdminScreen />}
       {route === 'account' && <AccountScreen />}
       {route === 'wishlist' && <WishlistScreen />}
-      {route === 'tryon' && <TryOnPage onSelectWig={(w) => { setSelectedWig(w); setShowTryOn(true); }} goProduct={goProduct} wishlistIds={wishlistIds} onToggleWishlist={toggleWishlist} />}
+      {route === 'tryon' && <TryOnPage onSelectWig={(w) => { setSelectedWig(w); setShowTryOn(true); }} goProduct={goProduct} wishlistIds={wishlistIds} />}
       {route === 'journal' && <JournalPage />}
 
       {/* Try-on modal overlay */}
