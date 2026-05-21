@@ -2,13 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { trpc } from '@/lib/trpc/client';
 import { useCart } from '@/hooks/use-cart';
 import { formatPrice } from '@/lib/utils/price';
 
 export default function CheckoutPage() {
-  const router = useRouter();
   const { items, getSubtotal, getTotal } = useCart();
   const [step, setStep] = useState<'address' | 'shipping' | 'payment'>(
     'address'
