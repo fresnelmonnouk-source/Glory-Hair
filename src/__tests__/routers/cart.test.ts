@@ -51,7 +51,7 @@ describe('cartRouter', () => {
       const caller = cartRouter.createCaller(ctx);
       const result = await caller.list();
       expect(result).toHaveLength(1);
-      expect(result[0].wig_id).toBe('wig-uuid-1');
+      expect(result[0]!.wig_id).toBe('wig-uuid-1');
     });
 
     it('lève une erreur Supabase', async () => {

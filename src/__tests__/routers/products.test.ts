@@ -13,9 +13,6 @@ const MOCK_WIG = {
   created_at: '2026-01-01T00:00:00Z',
 };
 
-function callProcedure(procedure: ReturnType<typeof productsRouter['_def']['procedures'][string]['_def']>, ctx: ReturnType<typeof createMockContext>, input: unknown) {
-  return (procedure as any)({ ctx, input, type: 'query', path: 'products' });
-}
 
 describe('productsRouter', () => {
   describe('list', () => {
@@ -101,7 +98,6 @@ describe('productsRouter', () => {
         return {};
       });
 
-      const eqChain = { eq: jest.fn().mockReturnThis() };
       (ctx.supabase.from as jest.Mock).mockImplementation((table: string) => {
         if (table === 'wigs') {
           return {
