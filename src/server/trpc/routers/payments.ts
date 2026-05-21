@@ -67,7 +67,7 @@ export const paymentsRouter = router({
         intentId: z.string(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       const { status } = await confirmPaymentIntent(input.intentId);
 
       return { status };
