@@ -26,7 +26,7 @@ export function GloryHairApp() {
   const [wishlistIds, setWishlistIds] = useState<string[]>([]);
   const [showTryOn, setShowTryOn] = useState(false);
   const [elodieChatOpen, setElodieChatOpen] = useState(false);
-  const [elodieMessages] = useState<
+  const [elodieMessages, setElodieMessages] = useState<
     Array<{ role: 'user' | 'bot'; content: React.ReactNode; quickReplies?: string[] }>
   >([
     {
@@ -40,6 +40,23 @@ export function GloryHairApp() {
       quickReplies: ['Trouver ma perruque', 'Lancer un essayage', 'Suivi de commande', 'Conseils morpho'],
     },
   ]);
+  const [elodieInput, setElodieInput] = useState('');
+
+  const sendElodieMessage = () => {
+    if (!elodieInput.trim()) return;
+
+    // Add user message
+    setElodieMessages(prev => [...prev, { role: 'user', content: elodieInput }]);
+    setElodieInput('');
+
+    // Simulate bot response (mock)
+    setTimeout(() => {
+      setElodieMessages(prev => [...prev, {
+        role: 'bot',
+        content: 'Merci pour votre message! 💭 Je traite votre demande...'
+      }]);
+    }, 500);
+  };
 
   const goProduct = (wig: typeof WIGS[0]) => {
     setSelectedWig(wig);
@@ -1226,8 +1243,13 @@ export function GloryHairApp() {
             ))}
           </div>
           <div className="elodie-input">
-            <input placeholder="Écrivez à Élodie…" />
-            <button className="elodie-send">
+            <input
+              placeholder="Écrivez à Élodie…"
+              value={elodieInput}
+              onChange={(e) => setElodieInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && sendElodieMessage()}
+            />
+            <button className="elodie-send" onClick={sendElodieMessage}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M22 2 11 13" />
                 <path d="M22 2l-7 20-4-9-9-4z" />
