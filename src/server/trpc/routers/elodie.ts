@@ -87,7 +87,7 @@ export const elodieRouter = router({
       if (messageError) throw new Error(messageError.message);
 
       // Get conversation context
-      const { data: conversation, error: convError } = await supabase
+      const { error: convError } = await supabase
         .from('elodie_conversations')
         .select('*')
         .eq('id', input.conversationId)
